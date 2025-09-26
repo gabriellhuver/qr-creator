@@ -6,6 +6,8 @@ class QRCodeGenerator {
         this.isCancelled = false;
         this.generatedCount = 0;
         this.totalCount = 0;
+        this.qrPreviews = [];
+        this.showPreview = false;
         
         this.initializeElements();
         this.bindEvents();
@@ -43,6 +45,20 @@ class QRCodeGenerator {
         // Action elements
         this.generateBtn = document.getElementById('generateBtn');
         
+        // Preview elements
+        this.previewSection = document.getElementById('previewSection');
+        this.togglePreviewBtn = document.getElementById('togglePreviewBtn');
+        this.previewInfo = document.getElementById('previewInfo');
+        this.qrPreviewGrid = document.getElementById('qrPreviewGrid');
+        
+        // Modal elements
+        this.qrModal = document.getElementById('qrModal');
+        this.qrModalTitle = document.getElementById('qrModalTitle');
+        this.qrModalImage = document.getElementById('qrModalImage');
+        this.qrModalCode = document.getElementById('qrModalCode');
+        this.qrModalFilename = document.getElementById('qrModalFilename');
+        this.closeModal = document.getElementById('closeModal');
+        
         // Canvas
         this.canvas = document.getElementById('hiddenCanvas');
     }
@@ -67,6 +83,24 @@ class QRCodeGenerator {
 
         // Clear button
         this.clearBtn.addEventListener('click', () => this.clearAll());
+
+        // Toggle preview button
+        this.togglePreviewBtn.addEventListener('click', () => this.togglePreview());
+
+        // Modal events
+        this.closeModal.addEventListener('click', () => this.closeQRModal());
+        this.qrModal.addEventListener('click', (e) => {
+            if (e.target === this.qrModal) {
+                this.closeQRModal();
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.qrModal.style.display === 'flex') {
+                this.closeQRModal();
+            }
+        });
     }
 
     switchTab(tabName) {
@@ -168,6 +202,8 @@ class QRCodeGenerator {
             this.generatedCount = 0;
             this.isGenerating = true;
             this.isCancelled = false;
+            this.qrPreviews = [];
+            this.showPreview = false;
 
             // Show progress section
             this.progressSection.style.display = 'block';
@@ -264,6 +300,13 @@ class QRCodeGenerator {
             // Add to ZIP
             this.zip.file(filename, blob);
             
+            // Store preview data
+            this.qrPreviews.push({
+                code: code,
+                filename: filename,
+                dataURL: canvas.toDataURL('image/png')
+            });
+            
             this.generatedCount++;
             this.updateProgress();
 
@@ -329,8 +372,12 @@ class QRCodeGenerator {
 
         this.resultsInfo.innerHTML = resultsText;
         this.resultsSection.style.display = 'block';
+        this.previewSection.style.display = 'block';
         this.progressSection.style.display = 'none';
         this.resetGeneration();
+        
+        // Update preview info
+        this.previewInfo.textContent = `${this.generatedCount} QR codes gerados`;
     }
 
     findDuplicates(codes) {
@@ -399,11 +446,70 @@ class QRCodeGenerator {
         this.zip = null;
         this.generatedCount = 0;
         this.totalCount = 0;
+        this.qrPreviews = [];
+        this.showPreview = false;
         
         this.progressSection.style.display = 'none';
         this.resultsSection.style.display = 'none';
+        this.previewSection.style.display = 'none';
+        this.qrPreviewGrid.innerHTML = '';
         
         this.showMessage('Dados limpos com sucesso!', 'success');
+    }
+
+    togglePreview() {
+        this.showPreview = !this.showPreview;
+        
+        if (this.showPreview) {
+            this.togglePreviewBtn.textContent = '🙈 Ocultar Preview';
+            this.renderPreview();
+        } else {
+            this.togglePreviewBtn.textContent = '🔍 Mostrar Preview';
+            this.qrPreviewGrid.innerHTML = '';
+        }
+    }
+
+    renderPreview() {
+        this.qrPreviewGrid.innerHTML = '';
+        
+        this.qrPreviews.forEach((qr, index) => {
+            const item = document.createElement('div');
+            item.className = 'qr-preview-item';
+            item.style.cursor = 'pointer';
+            
+            const img = document.createElement('img');
+            img.src = qr.dataURL;
+            img.className = 'qr-preview-image';
+            img.alt = qr.code;
+            
+            const label = document.createElement('div');
+            label.className = 'qr-preview-label';
+            label.textContent = qr.code.length > 15 ? qr.code.substring(0, 15) + '...' : qr.code;
+            label.title = qr.code; // Tooltip com texto completo
+            
+            // Add click event to open modal
+            item.addEventListener('click', () => this.openQRModal(qr));
+            
+            item.appendChild(img);
+            item.appendChild(label);
+            this.qrPreviewGrid.appendChild(item);
+        });
+    }
+
+    openQRModal(qr) {
+        this.qrModalTitle.textContent = 'QR Code - Escanear';
+        this.qrModalImage.src = qr.dataURL;
+        this.qrModalCode.textContent = qr.code;
+        this.qrModalFilename.textContent = qr.filename;
+        this.qrModal.style.display = 'flex';
+        
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeQRModal() {
+        this.qrModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
 
     showMessage(message, type = 'info') {

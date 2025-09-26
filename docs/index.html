@@ -93,6 +93,16 @@
                 </div>
             </section>
 
+            <!-- Preview Section -->
+            <section class="preview-section" id="previewSection" style="display: none;">
+                <h3>👁️ Preview dos QR Codes</h3>
+                <div class="preview-controls">
+                    <button id="togglePreviewBtn" class="btn btn-secondary">🔍 Mostrar Preview</button>
+                    <span class="preview-info" id="previewInfo"></span>
+                </div>
+                <div class="qr-preview-grid" id="qrPreviewGrid"></div>
+            </section>
+
             <!-- Actions Section -->
             <section class="actions-section">
                 <button id="generateBtn" class="btn btn-primary btn-large">🚀 Gerar QR Codes</button>
@@ -111,6 +121,23 @@
 
     <!-- Hidden canvas for QR generation -->
     <canvas id="hiddenCanvas" style="display: none;"></canvas>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="qr-modal" style="display: none;">
+        <div class="qr-modal-content">
+            <div class="qr-modal-header">
+                <h3 id="qrModalTitle">QR Code</h3>
+                <button id="closeModal" class="close-modal">&times;</button>
+            </div>
+            <div class="qr-modal-body">
+                <img id="qrModalImage" src="" alt="QR Code" class="qr-modal-image">
+                <div class="qr-modal-info">
+                    <p><strong>Código:</strong> <span id="qrModalCode"></span></p>
+                    <p><strong>Arquivo:</strong> <span id="qrModalFilename"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="qrcode.min.js"></script>
