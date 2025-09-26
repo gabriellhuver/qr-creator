@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Codes em Lote</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Gerador de QR Codes em Lote</h1>
+            <p>Gere múltiplos QR codes a partir de listas de texto ou arquivos</p>
+        </header>
+
+        <main>
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="input-tabs">
+                    <button class="tab-btn active" data-tab="textarea">Área de Texto</button>
+                    <button class="tab-btn" data-tab="file">Upload de Arquivo</button>
+                </div>
+
+                <div class="tab-content active" id="textarea-tab">
+                    <div class="input-group">
+                        <label for="textInput">Cole sua lista de códigos (um por linha):</label>
+                        <textarea id="textInput" placeholder="Código 1&#10;Código 2&#10;Código 3&#10;..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="file-tab">
+                    <div class="input-group">
+                        <label for="fileInput">Selecione arquivo TXT ou CSV:</label>
+                        <input type="file" id="fileInput" accept=".txt,.csv" />
+                        <div class="file-info" id="fileInfo"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Options Section -->
+            <section class="options-section">
+                <h3>⚙️ Opções de Geração</h3>
+                <div class="options-grid">
+                    <div class="option-group">
+                        <label for="size">Tamanho (px):</label>
+                        <input type="number" id="size" value="256" min="64" max="1024" step="32">
+                    </div>
+                    <div class="option-group">
+                        <label for="margin">Margem:</label>
+                        <input type="number" id="margin" value="4" min="0" max="20">
+                    </div>
+                    <div class="option-group">
+                        <label for="ecc">Nível de Correção:</label>
+                        <select id="ecc">
+                            <option value="L">L (Baixo ~7%)</option>
+                            <option value="M" selected>M (Médio ~15%)</option>
+                            <option value="Q">Q (Alto ~25%)</option>
+                            <option value="H">H (Muito Alto ~30%)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="batchSize">Tamanho do Lote:</label>
+                        <input type="number" id="batchSize" value="50" min="10" max="200">
+                    </div>
+                </div>
+                <div class="option-group">
+                    <label for="filenamePattern">Padrão do Nome:</label>
+                    <select id="filenamePattern">
+                        <option value="index">conteudo_{index:0001}.png</option>
+                        <option value="hash">conteudo_{hash8}.png</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="progress-section" id="progressSection" style="display: none;">
+                <h3>📊 Progresso</h3>
+                <div class="progress-info">
+                    <span id="progressText">0 / 0</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-actions">
+                    <button id="cancelBtn" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <h3>✅ Resultados</h3>
+                <div class="results-info" id="resultsInfo"></div>
+                <div class="results-actions">
+                    <button id="downloadBtn" class="btn btn-primary">📥 Baixar ZIP</button>
+                    <button id="clearBtn" class="btn btn-secondary">🗑️ Limpar</button>
+                </div>
+            </section>
+
+            <!-- Actions Section -->
+            <section class="actions-section">
+                <button id="generateBtn" class="btn btn-primary btn-large">🚀 Gerar QR Codes</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>Gerador de QR Codes em Lote - Processamento otimizado para grandes volumes</p>
+            <div class="coffee-section">
+                <a href="https://buy.stripe.com/4gM3cu3YA4Cg64m8u94AU00" target="_blank" class="coffee-btn">
+                    ☕ Buy me a coffee
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Hidden canvas for QR generation -->
+    <canvas id="hiddenCanvas" style="display: none;"></canvas>
+
+    <!-- Scripts -->
+    <script src="qrcode.min.js"></script>
+    <script src="jszip.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
