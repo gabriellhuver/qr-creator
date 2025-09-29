@@ -2,6 +2,8 @@
 
 Um gerador de QR codes em lote com interface web moderna, desenvolvido em JavaScript puro.
 
+🌐 **Acesse online**: [https://gabriellhuver.github.io/qr-creator/](https://gabriellhuver.github.io/qr-creator/)
+
 ## ✨ Funcionalidades
 
 - **Múltiplas formas de entrada**: Área de texto ou upload de arquivos (TXT/CSV)
@@ -13,12 +15,16 @@ Um gerador de QR codes em lote com interface web moderna, desenvolvido em JavaSc
 
 ## 🚀 Como usar
 
-### 1. Iniciar o servidor local
+### Opção 1: Acesso direto (Recomendado)
+Acesse diretamente: [https://gabriellhuver.github.io/qr-creator/](https://gabriellhuver.github.io/qr-creator/)
+
+### Opção 2: Servidor local
+#### 1. Iniciar o servidor local
 ```bash
 python3 -m http.server 8000
 ```
 
-### 2. Acessar a aplicação
+#### 2. Acessar a aplicação
 Abra o navegador em: `http://localhost:8000`
 
 ### 3. Inserir códigos
